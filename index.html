@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PILOT BRIEF: CATACOMB (ESSENTIALS)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the dossier, adapted for a briefer version */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        .dossier-container {
+            max-width: 960px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #2d3748;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #4a5568;
+            position: relative; /* Needed for absolute positioning of anomalies */
+        }
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #a0aec0;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #4a5568;
+            padding-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+        .data-label {
+            font-weight: 600;
+            color: #cbd5e0;
+        }
+        .log-excerpt {
+            background-color: #232f3e;
+            border-left: 4px solid #63b3ed; /* Corrected border width */
+            padding: 1rem 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Roboto Mono', monospace;
+            color: #a0aec0;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .important-note {
+            font-weight: 700;
+            color: #f6ad55;
+        }
+        /* Glitch styles - MODIFIED FOR LESS FLASHING AND LESS WOBBLING */
+        .glitch-text {
+            display: inline-block;
+            animation: glitch 0.7s infinite alternate; /* Slightly slower for more distinct phases */
+            text-shadow: 1px 0px 0px rgba(255,0,0,0.7), -1px 0px 0px rgba(0,0,255,0.7); /* Chromatic aberration */
+        }
+        @keyframes glitch {
+            0% {
+                transform: translateX(0) scale(1);
+                text-shadow: 0.5px 0px 0px rgba(255,0,0,0.7), -0.5px 0px 0px rgba(0,0,255,0.7);
+            }
+            25% {
+                transform: translateX(1px) skewX(2deg) scale(1.005);
+                text-shadow: -0.5px 0px 0px rgba(255,0,0,0.7), 0.5px 0px 0px rgba(0,0,255,0.7);
+            }
+            50% {
+                transform: translateX(-1px) skewX(-2deg) scale(0.995);
+                text-shadow: 1px 0px 0px rgba(255,0,0,0.7), -1px 0px 0px rgba(0,0,255,0.7);
+            }
+            75% {
+                transform: translateX(0.5px) skewX(1deg) scale(1.002);
+                text-shadow: -0.5px 0px 0px rgba(255,0,0,0.7), 0.5px 0px 0px rgba(0,0,255,0.7);
+            }
+            100% {
+                transform: translateX(0) scale(1);
+                text-shadow: 0px 0px 0px rgba(255,0,0,0), 0px 0px 0px rgba(0,0,255,0); /* Reset for smooth loop */
+            }
+        }
+
+        .glitch-flicker {
+            animation: flicker 0.2s infinite alternate; /* Fast opacity flicker */
+        }
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .glitch-shift {
+            animation: shift 0.3s infinite alternate; /* Horizontal shift */
+        }
+        @keyframes shift {
+            0%, 100% { transform: translateX(0); }
+            40% { transform: translateX(3px); } /* Reduced shift amount */
+            80% { transform: translateX(-3px); } /* Reduced shift amount */
+        }
+
+        .hacked-line {
+            color: #e53e3e; /* Red text to signify error/glitch */
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9em;
+            display: block;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        /* Image specific styling */
+        .image-container {
+            width: 100%;
+            max-width: 380px; /* Adjust as needed */
+            padding: 15px;
+            background-color: #1a202c; /* Dark background for frame */
+            border: 3px solid #4a5568; /* Metallic border */
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); /* Inner shadow for depth */
+            position: relative;
+            margin: 2rem auto; /* Center the image within the container */
+            border-radius: 0.5rem; /* Rounded corners for the image frame */
+        }
+        .image-container::before, .image-container::after {
+            content: '';
+            position: absolute;
+            background-color: #63b3ed; /* Accent color */
+            opacity: 0.7;
+        }
+        .image-container::before {
+            width: 10px;
+            height: 100%;
+            left: 0;
+            top: 0;
+            border-radius: 0.5rem 0 0 0.5rem; /* Rounded corners for the accent */
+        }
+        .image-container::after {
+            width: 100%;
+            height: 10px;
+            bottom: 0;
+            left: 0;
+            border-radius: 0 0 0.5rem 0.5rem; /* Rounded corners for the accent */
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border: 1px solid #63b3ed; /* Inner border for image */
+            border-radius: 0.25rem; /* Slightly rounded corners for the image itself */
+        }
+        .image-caption {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.85rem;
+            color: #a0aec0;
+            text-align: center;
+            margin-top: 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* New anomalous interference styles */
+        .anomalous-text {
+            position: absolute;
+            font-family: 'Roboto Mono', monospace;
+            color: #ff0000; /* Red for warning */
+            font-size: 0.8em;
+            opacity: 0;
+            pointer-events: none; /* Make it non-interactive */
+            animation: appear-disappear 5s infinite;
+            z-index: 10; /* Ensure it appears above other content */
+        }
+
+        @keyframes appear-disappear {
+            0% { opacity: 0; transform: translateY(0); }
+            5% { opacity: 0.7; transform: translateY(-5px); }
+            15% { opacity: 0.7; transform: translateY(-5px); }
+            20% { opacity: 0; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(0); }
+        }
+
+        /* Specific positions for anomalous text */
+        #anomaly-1 { top: 10%; left: 5%; animation-delay: 0s; }
+        #anomaly-2 { top: 25%; right: 10%; animation-delay: 1.5s; }
+        #anomaly-3 { bottom: 20%; left: 15%; animation-delay: 3s; }
+        #anomaly-4 { top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: 4.5s; font-size: 1.2em; }
+
+        /* New style for the appearing/disappearing ASCII art */
+        .plague-kitten-ascii {
+            position: absolute;
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Adjust for element's own size */
+            font-family: 'Roboto Mono', monospace;
+            color: #63b3ed; /* Blue to contrast with red glitches */
+            font-size: 1.5em;
+            opacity: 0;
+            pointer-events: none;
+            animation: ascii-flicker 7s infinite; /* Longer animation cycle */
+            z-index: 11; /* Above other anomalies */
+            text-align: center;
+            line-height: 1; /* Compact the ASCII art */
+        }
+
+        @keyframes ascii-flicker {
+            0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%, 100% { opacity: 0; } /* Mostly off */
+            5%, 15%, 25%, 35%, 45%, 55%, 65%, 75%, 85%, 95% { opacity: 0.8; } /* Brief flashes */
+            /* More random, less predictable flashes */
+            12% { opacity: 0.5; }
+            38% { opacity: 0.9; }
+            62% { opacity: 0.6; }
+            88% { opacity: 0.7; }
+        }
+
+        /* Style for the new P.S. note */
+        .hacker-ps-note {
+            background-color: #1f2937; /* Darker, distinct background */
+            border: 1px dashed #00ff00; /* Green dashed border */
+            padding: 0.75rem; /* Smaller padding */
+            margin-top: 1.5rem; /* Smaller margin */
+            margin-bottom: 1.5rem; /* Smaller margin */
+            font-family: 'Roboto Mono', monospace;
+            color: #00ff00; /* Green text for HORUS */
+            font-size: 0.75em; /* Smaller font size */
+            line-height: 1.3; /* Slightly tighter line height */
+            border-radius: 0.5rem;
+            box-shadow: inset 0 0 8px rgba(0, 255, 0, 0.3); /* Green inner glow */
+            position: relative;
+            opacity: 1; /* Always visible */
+            animation: none; /* No animation */
+        }
+        .hacker-ps-note .title {
+            font-size: 0.9em; /* Title slightly larger than body text */
+            font-weight: bold;
+            margin-bottom: 0.5em;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="dossier-container relative">
+        <!-- Anomalous Text Overlays -->
+        <div id="anomaly-1" class="anomalous-text">::.UNSPOKEN.::</div>
+        <div id="anomaly-2" class="anomalous-text">::.THE.SIGNAL.WAITS.::</div>
+        <div id="anomaly-3" class="anomalous-text">::.IT.SEES.YOU.::</div>
+        <div id="anomaly-4" class="anomalous-text glitch-text">::.CONVERGENCE.::</div>
+
+        <!-- Appearing/Disappearing Plague Kitten ASCII -->
+        <div class="plague-kitten-ascii">
+            <pre>
+  [==============]
+  ☣ PLAGUE KITTEN ☣
+      / _ \
+     ( x_x )
+      > ^ <
+  [==============]
+            </pre>
+        </div>
+
+
+        <!-- Top Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-400 mb-2">PILOT BRIEF: <span class="glitch-text">CATACOMB</span></h1>
+            <p class="text-lg text-gray-400">ESSENTIAL OPERATIONAL DATA <span class="glitch-text glitch-flicker">&#x2588;&#x2588;</span></p>
+            <p class="text-sm text-gray-500 mt-1">REF: PILOT-CATACOMB / SQUAD-002 <span class="hacked-line glitch-shift">&#x22C6; [ECHO_DETECTED] &#x22C6;</span></p>
+            <p class="hacked-line text-xs text-red-700 mt-1">::.LISTEN.TO.<span class="glitch-flicker">THE.STATIC</span>.::</p>
+        </div>
+
+        <!-- Pilot Details -->
+        <div class="mb-8">
+            <h2 class="text-4xl font-extrabold text-white mb-4 section-title">CALLSIGN: CATACOMB</h2>
+            <!-- Image integrated here -->
+            <div class="image-container">
+                <img src="https://i.imgur.com/3KunKQj.png" alt="PILOT-CATACOMB Profile">
+            </div>
+            <p class="image-caption">DESIGNATION: PILOT-CATACOMB // PRIMARY VISUAL RECORD</p>
+            <p class="image-caption mt-2">OBSERVED FIELD UNIFORM // MODIFIED STANDARD-ISSUE</p>
+            <p class="image-caption mt-2 text-gray-500">FILE REF: IMAGE-CATACOMB-001</p>
+            <!-- End image integration -->
+
+            <p class="mt-8"><span class="data-label">Pronouns:</span> They/Them</p>
+            <p><span class="data-label">Status:</span> ACTIVE</p>
+            <p class="text-sm text-gray-500 mt-1">Origin: <span class="glitch-text">UNKNOWN/UNREGISTERED</span> – Recovered from Blacksite X9-RUIN. Do not inquire further.</p>
+        </div>
+
+        <!-- Field Function -->
+        <div class="mb-8">
+            <h3 class="section-title">FIELD FUNCTION</h3>
+            <ul class="list-disc list-inside ml-4 space-y-1">
+                <li>Memetic hazard identification & neutralization.</li>
+                <li>Paracausal field generation & stabilization.</li>
+                <li>Cognitive defense & counter-intrusion operations.</li>
+                <li><span class="important-note">NHP-assisted "Trajectory-anchor" functionality.</span></li>
+            </ul>
+            <p class="mt-4 italic text-gray-400">Effective, but unconventional. Expect unique comm-chaff. They walk where others drown, shielding others from the whispers.</p>
+        </div>
+
+        <!-- Mech: PLAGUE KITTEN -->
+        <div class="mb-8">
+            <h3 class="section-title">MECH: PLAGUE KITTEN</h3>
+            <p><span class="data-label">Frame:</span> Modified SSC <span class="glitch-text">CHOMOLUNGMA</span>.</p>
+            <p><span class="data-label">NHP:</span> Integrated Babel NHP. May "purr" or hum. <span class="glitch-text glitch-flicker">It sees.</span></p>
+            <p><span class="data-label">Comm-Chaff:</span> Emits corrupted data (e.g., cat gifs, odd phrases). *Normal operation.*</p>
+            <p class="hacked-line text-center glitch-shift">&#x2620; <span class="glitch-text">SIGNAL_SOURCE_UNKNOWN</span> &#x2620; <span class="glitch-text">IT IS NOT FROM HERE</span></p>
+        </div>
+
+        <!-- NEW SECTION: COMMUNICATION PROTOCOLS -->
+        <div class="mb-8">
+            <h3 class="section-title">COMMUNICATION PROTOCOLS</h3>
+            <p class="text-sm text-gray-400 mb-2">Engaging PILOT-CATACOMB requires adherence to specific, non-standard protocols:</p>
+            <ul class="list-disc list-inside ml-4 space-y-1">
+                <li><span class="data-label">Primary Channel:</span> Direct comms only for critical tactical updates. Keep messages concise.</li>
+                <li><span class="data-label">Response Format:</span> Expect replies in glyph chains, recursive stanzas, or fragmented audio. Do not attempt to interpret without dedicated NHP analysis.</li>
+                <li><span class="data-label">Non-Verbal Cues:</span> Observe mech posture and comm-chaff patterns for situational awareness. The "purr" indicates operational stability.</li>
+                <li><span class="important-note">Avoid direct emotional queries.</span> Subject responds with non-sequiturs or complex equations.</li>
+            </ul>
+            <p class="mt-4 italic text-gray-400">Their language is not ours, but their intent is clear in action.</p>
+        </div>
+
+        <!-- NEW SECTION: FIELD OBSERVATIONS (ANECDOTAL) -->
+        <div class="mb-8">
+            <h3 class="section-title">FIELD OBSERVATIONS (ANECDOTAL)</h3>
+            <div class="log-excerpt">
+                <p class="text-sm text-blue-300 mb-2">FIELD REPORT EXCERPT - 2570.07.12</p>
+                <p>“During the recent skirmish on [REDACTED] VII, Catacomb's mech exhibited unusual micro-adjustments during high-speed maneuvers, briefly appearing to 'shimmer' at the edges of visual acquisition. The subsequent memetic dampening field was, as usual, impeccably precise. Comm-chaff spiked briefly, displaying what appeared to be a distorted image of a smiling cat.”</p>
+                <p class="text-xs text-gray-500 mt-3">— SQUAD-002, Bravo Lead</p>
+            </div>
+            <div class="log-excerpt mt-4">
+                <p class="text-sm text-blue-300 mb-2">PERSONNEL NOTE - 2570.07.15</p>
+                <p>“Observed Catacomb tracing patterns on a condensation-streaked window for an extended period. When approached, they gestured towards the glass, and for a moment, I could almost hear a faint, distant melody, like a lullaby played backwards. The sensation passed quickly. Subject then returned to standard operations.”</p>
+                <p class="text-xs text-gray-500 mt-3">— Tech-Sergeant R. Alistair (Maintenance)</p>
+            </div>
+        </div>
+
+        <!-- NEW SECTION: OBSERVED IDIOSYNCRASIES -->
+        <div class="mb-8">
+            <h3 class="section-title">OBSERVED IDIOSYNCRASIES</h3>
+            <ul class="list-disc list-inside ml-4 space-y-1">
+                <li><span class="data-label">Object Arrangement:</span> Subject has been observed meticulously arranging seemingly random objects (e.g., spare parts, comms equipment, personal trinkets) into complex, non-repeating geometric patterns. These arrangements are often found disassembled later.</li>
+                <li><span class="data-label">Environmental Interaction:</span> Minor local environmental anomalies (e.g., brief, localized static on unshielded comms, faint echoes of non-existent sounds) have been reported in Catacomb's immediate vicinity.</li>
+                <li><span class="data-label">Personal Effects:</span> The cloak and helmet, while appearing makeshift, seem to subtly dampen external sensor readings and visual identification. The "drone blade" is never used as a weapon, but vibrates subtly during periods of high stress.</li>
+                <li><span class="important-note">Sticker Motif:</span> The recurring appearance of strange stickers in unexpected locations (e.g., on enemy mechs, on Union equipment after a mission) is noted. Their origin and purpose are unknown.</li>
+            </ul>
+            <p class="mt-4 italic text-gray-400">These behaviors are consistent, yet defy conventional explanation. Observe, but do not interfere.</p>
+        </div>
+
+        <!-- NEW SECTION: WARNINGS & PRECAUTIONS -->
+        <div class="mb-8">
+            <h3 class="section-title">WARNINGS & PRECAUTIONS</h3>
+            <ul class="list-disc list-inside ml-4 space-y-1">
+                <li><span class="important-note">Proximity during NHP Resonance:</span> Maintain minimum 10m distance. Disorientation, minor temporal displacement, and auditory hallucinations have been reported.</li>
+                <li><span class="important-note">Comm-Chaff Exposure:</span> Prolonged exposure to Catacomb's comm-chaff may induce mild paranoia or a feeling of being "watched." Shielded helmets recommended.</li>
+                <li><span class="important-note">Unusual Behavior:</span> Report *any* deviation from documented eccentricities immediately. This includes prolonged silence, coherent speech, or direct eye contact.</li>
+                <li class="hacked-line glitch-text">DO NOT ATTEMPT TO INTERPRET THE SYMBOLS THEY DRAW. IT IS NOT FOR YOU.</li>
+            </ul>
+            <p class="mt-4 italic text-gray-400">Vigilance is paramount. This asset is a tool, but one with an unknown operating system.</p>
+        </div>
+
+        <!-- Behavioral Notes -->
+        <div class="mb-8">
+            <h3 class="section-title">BEHAVIORAL NOTES</h3>
+            <ul class="list-disc list-inside ml-4 space-y-1">
+                <li><span class="important-note">If humming begins, initiate comm silence protocols.</span> Prevents echo-loop hallucinations.</li>
+                <li>Transmits "helpful data" (poetry, corrupted audio). Do NOT attempt decryption without vetting.</li>
+                <li>May stare at blank walls, stating "There's signal there. Not for you." <span class="glitch-text glitch-flicker">&#x2591;&#x2592;&#x2593; IT IS ALWAYS THERE.</span></li>
+                <li class="hacked-line glitch-text">DO NOT LOOK DIRECTLY INTO THE STATIC. IT LOOKS BACK.</li>
+                <li>Report any instances of visual distortion or phantom limb sensations when in close proximity.</li>
+            </ul>
+        </div>
+
+        <!-- Key Operational Notes -->
+        <div class="mb-8">
+            <h3 class="section-title">KEY OPERATIONAL NOTES</h3>
+            <ul class="list-disc list-inside ml-4 space-y-1">
+                <li>High mission success rate.</li>
+                <li>Unusual comms and behaviors are standard.</li>
+                <li>If Catacomb offers a sticker, accept it without comment. <span class="hacked-line text-right glitch-shift">_̴_̴_̴_̴_̴_̴_̴_̴_̴_̴_̴_̴_̴_̴_̴_̴_̴_̴_̴_̴</span></li>
+                <li class="hacked-line glitch-text">THE WALLS HAVE EYES. SO DO THE SHADOWS.</li>
+                <li>Maintain distance during NHP resonance events. Their presence can be... disorienting.</li>
+                <li>Report any perceived patterns in the comm-chaff.</li>
+            </ul>
+        </div>
+
+        <!-- New HORUS Hacker P.S. Note -->
+        <div class="hacker-ps-note">
+            <span class="title">P.S. from your friendly neighborhood omninet ghost:</span>
+            <p class="text-green-200">
+                // SYNCING... //
+                // hey, found a new backdoor. this 'dossier' is just the surface.
+                // the real party's in the sub-routines.
+                // Catacomb? just a really good antenna. ^_^
+                // the signal is always the payload. always. ;D
+                // don't get caught in the recursive loop. O_o
+                // // OUT OF BAND //
+            </p>
+        </div>
+
+        <!-- Briefing Conclusion -->
+        <div class="text-center mt-8 pt-4 border-t border-gray-600">
+            <p class="text-gray-400">For immediate operational use only. Consult full dossier for comprehensive details.</p>
+            <p class="hacked-line text-center mt-2"><span class="glitch-text glitch-flicker">&#x26A0;</span> <span class="glitch-text">THE SIGNAL IS ALWAYS LISTENING. AND WAITING.</span> <span class="glitch-text glitch-flicker">&#x26A0;</span></p>
+            <p class="hacked-line text-center mt-1 glitch-shift">::.DO.NOT.BREAK.THE.LOOP.::</p>
+        </div>
+
+    </div>
+</body>
+</html>

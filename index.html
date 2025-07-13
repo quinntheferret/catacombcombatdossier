@@ -6,7 +6,10 @@
     <title>PILOT BRIEF: CATACOMB (ESSENTIALS)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Tone.js CDN for audio synthesis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
     <style>
         /* Custom styles for the dossier, adapted for a briefer version */
         body {
@@ -24,6 +27,27 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             border: 1px solid #4a5568;
             position: relative; /* Needed for absolute positioning of anomalies */
+        }
+        .classified-stamp {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            color: #e53e3e; /* Red for classified */
+            border: 2px solid #e53e3e;
+            padding: 0.25rem 0.75rem;
+            transform: rotate(-8deg); /* Slight rotation */
+            display: inline-block;
+            position: absolute;
+            top: 1.5rem;
+            right: 2rem;
+            letter-spacing: 0.1em;
+            font-size: 1.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer; /* Indicate it's clickable */
+            transition: transform 0.1s ease-in-out; /* Add a subtle click animation */
+            z-index: 20; /* Ensure it's above other content */
+        }
+        .classified-stamp:active {
+            transform: rotate(-8deg) scale(0.95); /* Shrink slightly on click */
         }
         .section-title {
             font-family: 'Oswald', sans-serif;
@@ -194,11 +218,12 @@
             color: #63b3ed; /* Blue to contrast with red glitches */
             font-size: 1.5em;
             opacity: 0;
-            pointer-events: none;
+            /* REMOVED: pointer-events: none; to make it clickable */
             animation: ascii-flicker 7s infinite; /* Longer animation cycle */
             z-index: 11; /* Above other anomalies */
             text-align: center;
             line-height: 1; /* Compact the ASCII art */
+            cursor: pointer; /* Indicate it's clickable */
         }
 
         @keyframes ascii-flicker {
@@ -234,6 +259,16 @@
             margin-bottom: 0.5em;
             display: block;
             text-align: center;
+            cursor: pointer; /* Make title clickable */
+        }
+
+        /* Style for clickable elements */
+        .clickable-text {
+            cursor: pointer;
+            transition: color 0.1s ease-in-out;
+        }
+        .clickable-text:hover {
+            color: #63b3ed; /* Highlight on hover */
         }
     </style>
 </head>
@@ -246,7 +281,7 @@
         <div id="anomaly-4" class="anomalous-text glitch-text">::.CONVERGENCE.::</div>
 
         <!-- Appearing/Disappearing Plague Kitten ASCII -->
-        <div class="plague-kitten-ascii">
+        <div class="plague-kitten-ascii" id="plagueKitten">
             <pre>
   [==============]
   ☣ PLAGUE KITTEN ☣
@@ -258,9 +293,12 @@
         </div>
 
 
+        <!-- Classified Stamp - Clickable for sound -->
+        <span class="classified-stamp" id="classifiedStamp">CLASSIFIED</span>
+
         <!-- Top Header -->
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-blue-400 mb-2">PILOT BRIEF: <span class="glitch-text">CATACOMB</span></h1>
+            <h1 class="text-3xl font-bold text-blue-400 mb-2 clickable-text" id="mainTitleClickable">PILOT BRIEF: <span class="glitch-text">CATACOMB</span></h1>
             <p class="text-lg text-gray-400">ESSENTIAL OPERATIONAL DATA <span class="glitch-text glitch-flicker">&#x2588;&#x2588;</span></p>
             <p class="text-sm text-gray-500 mt-1">REF: PILOT-CATACOMB / SQUAD-002 <span class="hacked-line glitch-shift">&#x22C6; [ECHO_DETECTED] &#x22C6;</span></p>
             <p class="hacked-line text-xs text-red-700 mt-1">::.LISTEN.TO.<span class="glitch-flicker">THE.STATIC</span>.::</p>
@@ -297,7 +335,7 @@
 
         <!-- Mech: PLAGUE KITTEN -->
         <div class="mb-8">
-            <h3 class="section-title">MECH: PLAGUE KITTEN</h3>
+            <h3 class="section-title clickable-text" id="mechTitleClickable">MECH: PLAGUE KITTEN</h3>
             <p><span class="data-label">Frame:</span> Modified SSC <span class="glitch-text">CHOMOLUNGMA</span>.</p>
             <p><span class="data-label">NHP:</span> Integrated Babel NHP. May "purr" or hum. <span class="glitch-text glitch-flicker">It sees.</span></p>
             <p><span class="data-label">Comm-Chaff:</span> Emits corrupted data (e.g., cat gifs, odd phrases). *Normal operation.*</p>
@@ -363,7 +401,7 @@
                 <li><span class="important-note">If humming begins, initiate comm silence protocols.</span> Prevents echo-loop hallucinations.</li>
                 <li>Transmits "helpful data" (poetry, corrupted audio). Do NOT attempt decryption without vetting.</li>
                 <li>May stare at blank walls, stating "There's signal there. Not for you." <span class="glitch-text glitch-flicker">&#x2591;&#x2592;&#x2593; IT IS ALWAYS THERE.</span></li>
-                <li class="hacked-line glitch-text">DO NOT LOOK DIRECTLY INTO THE STATIC. IT LOOKS BACK.</li>
+                <li class="hacked-line glitch-text clickable-text" id="wallsHaveEyesClickable">THE WALLS HAVE EYES. SO DO THE SHADOWS.</li>
                 <li>Report any instances of visual distortion or phantom limb sensations when in close proximity.</li>
             </ul>
         </div>
@@ -383,14 +421,14 @@
 
         <!-- New HORUS Hacker P.S. Note -->
         <div class="hacker-ps-note">
-            <span class="title">P.S. from your friendly neighborhood omninet ghost:</span>
+            <span class="title clickable-text" id="psTitleClickable">P.S. from your friendly neighborhood omninet ghost:</span>
             <p class="text-green-200">
                 // SYNCING... //
                 // hey, found a new backdoor. this 'dossier' is just the surface.
-                // the real party's in the sub-routines.
-                // Catacomb? just a really good antenna. ^_^
-                // the signal is always the payload. always. ;D
-                // don't get caught in the recursive loop. O_o
+                // the real party's in the sub-routines. ;P
+                // Catacomb? just a really good antenna. (o_O)
+                // the signal is always the payload. always. >_>
+                // don't get caught in the recursive loop. @_@
                 // // OUT OF BAND //
             </p>
         </div>
@@ -398,10 +436,170 @@
         <!-- Briefing Conclusion -->
         <div class="text-center mt-8 pt-4 border-t border-gray-600">
             <p class="text-gray-400">For immediate operational use only. Consult full dossier for comprehensive details.</p>
-            <p class="hacked-line text-center mt-2"><span class="glitch-text glitch-flicker">&#x26A0;</span> <span class="glitch-text">THE SIGNAL IS ALWAYS LISTENING. AND WAITING.</span> <span class="glitch-text glitch-flicker">&#x26A0;</span></p>
-            <p class="hacked-line text-center mt-1 glitch-shift">::.DO.NOT.BREAK.THE.LOOP.::</p>
+            <p class="hacked-line text-center mt-2 signal-line-clickable" id="signalLineClickable"><span class="glitch-text glitch-flicker">&#x26A0;</span> <span class="glitch-text">THE SIGNAL IS ALWAYS LISTENING. AND WAITING.</span> <span class="glitch-text glitch-flicker">&#x26A0;</span></p>
+            <p class="hacked-line text-center mt-1 loop-line-clickable" id="loopLineClickable">::.DO.NOT.BREAK.THE.LOOP.::</p>
         </div>
 
     </div>
+
+    <script>
+        // Tone.js setup for spooky sounds
+        let droneSynth;
+        let glitchSynth;
+        let lowLullabySynth;
+        let highLullabySynth;
+        let mainTitleSynth;
+        let mechTitleSynth; // Changed to PolySynth for melodic notes
+        let whisperSynth;
+        let dataBurstSynth;
+        let reverb;
+        let delay;
+
+        window.onload = function() {
+            // Initialize Tone.js context on first user interaction
+            document.documentElement.addEventListener('mousedown', async () => {
+                if (Tone.context.state !== 'running') {
+                    await Tone.start();
+                    console.log("Audio context started.");
+                }
+            }, { once: true });
+
+
+            // Drone Synth (for Classified Stamp)
+            droneSynth = new Tone.AMSynth({
+                oscillator: { type: "sine" },
+                envelope: { attack: 0.5, decay: 0.1, sustain: 0.5, release: 1.5 },
+                modulation: { type: "sawtooth" },
+                modulationEnvelope: { attack: 0.5, decay: 0, sustain: 1, release: 0.5 }
+            }).toDestination();
+
+            // Glitch Synth (for Plague Kitten)
+            glitchSynth = new Tone.NoiseSynth({
+                noise: { type: "white" },
+                envelope: { attack: 0.005, decay: 0.1, sustain: 0, release: 0.1 }
+            }).chain(new Tone.BitCrusher(4), Tone.Destination); // Add a bitcrusher for glitch effect
+
+            // Low Lullaby Synth (for Signal Line)
+            lowLullabySynth = new Tone.Synth({
+                oscillator: { type: "triangle" }, // Soft triangle wave
+                envelope: { attack: 1.0, decay: 0.5, sustain: 0.8, release: 2.0 } // Slow, sustained
+            });
+
+            // High/Childlike Lullaby Synth (for Loop Line)
+            highLullabySynth = new Tone.Synth({
+                oscillator: { type: "sine" }, // Smoother sine wave for a more ethereal sound
+                envelope: { attack: 0.8, decay: 0.3, sustain: 0.6, release: 1.8 } // Gentle attack, sustained
+            });
+
+            // Main Title Synth (deep hum)
+            mainTitleSynth = new Tone.Synth({
+                oscillator: { type: "fmsine", modulationType: "sine", harmonicity: 0.5, modulator: { type: "square" } },
+                envelope: { attack: 2, decay: 0.5, sustain: 0.7, release: 3 }
+            }).toDestination();
+
+            // Mech Title Synth (weirdly cutesy) - Changed to PolySynth for notes
+            mechTitleSynth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: "triangle" }, // Soft, slightly innocent tone
+                envelope: { attack: 0.05, decay: 0.2, sustain: 0.1, release: 0.5 },
+                volume: -10 // Keep it subtle
+            }).toDestination();
+
+            // Whisper Synth (short, high static)
+            whisperSynth = new Tone.NoiseSynth({
+                noise: { type: "pink" },
+                envelope: { attack: 0.01, decay: 0.05, sustain: 0, release: 0.05 }
+            }).toDestination();
+
+            // Data Burst Synth (quick distorted tone)
+            dataBurstSynth = new Tone.MembraneSynth({
+                pitchDecay: 0.05,
+                octaves: 8,
+                oscillator: { type: "sine" },
+                envelope: { attack: 0.001, decay: 0.4, sustain: 0.01, release: 0.04 },
+                volume: -10
+            }).chain(new Tone.BitCrusher(8), Tone.Destination);
+
+
+            // Effects for Lullaby Synths
+            reverb = new Tone.Reverb({ decay: 5, predelay: 0.1 }).toDestination();
+            delay = new Tone.PingPongDelay("4n", 0.5).toDestination(); // Quarter note delay with feedback
+            lowLullabySynth.chain(reverb, delay, Tone.Destination);
+            highLullabySynth.chain(reverb, delay, Tone.Destination);
+
+
+            // Get clickable elements
+            const classifiedStamp = document.getElementById('classifiedStamp');
+            const plagueKitten = document.getElementById('plagueKitten');
+            const signalLineClickable = document.getElementById('signalLineClickable');
+            const loopLineClickable = document.getElementById('loopLineClickable');
+            const mainTitleClickable = document.getElementById('mainTitleClickable');
+            const mechTitleClickable = document.getElementById('mechTitleClickable');
+            const wallsHaveEyesClickable = document.getElementById('wallsHaveEyesClickable');
+            const psTitleClickable = document.getElementById('psTitleClickable');
+
+            // Add click listeners
+            classifiedStamp.addEventListener('click', () => {
+                droneSynth.triggerAttackRelease("C1", "2s");
+                droneSynth.triggerAttackRelease("C#1", "2s", Tone.now() + 0.1);
+            });
+
+            plagueKitten.addEventListener('click', () => {
+                glitchSynth.triggerAttackRelease("8n"); // Play a short glitch sound
+            });
+
+            signalLineClickable.addEventListener('click', () => {
+                // "Low Lullaby" melody (simple, slightly dissonant)
+                const melody = ["C3", "G2", "A2", "F2"]; // C minor scale notes
+                const reversedMelody = [...melody].reverse(); // Reverse the melody
+
+                let time = Tone.now();
+                const noteDuration = "0.7s"; // Duration for each note
+
+                reversedMelody.forEach((note, index) => {
+                    lowLullabySynth.triggerAttackRelease(note, noteDuration, time);
+                    time += Tone.Time(noteDuration).toSeconds(); // Advance time for next note
+                });
+            });
+
+            loopLineClickable.addEventListener('click', () => {
+                // "High/Childlike Lullaby" melody (higher register, slightly more delicate)
+                const highMelody = ["C5", "G4", "A4", "F4"]; // Higher notes
+                const reversedHighMelody = [...highMelody].reverse(); // Reverse the melody
+
+                let time = Tone.now();
+                const noteDuration = "0.6s"; // Slightly faster for childlike feel
+
+                reversedHighMelody.forEach((note, index) => {
+                    highLullabySynth.triggerAttackRelease(note, noteDuration, time);
+                    time += Tone.Time(noteDuration).toSeconds();
+                });
+            });
+
+            mainTitleClickable.addEventListener('click', () => {
+                mainTitleSynth.triggerAttackRelease("C0", "4s"); // Very low, sustained hum
+            });
+
+            mechTitleClickable.addEventListener('click', () => {
+                // Weirdly cutesy sound for Mech: Plague Kitten
+                const cutesyNotes = ["C5", "E5", "G5", "C6"]; // A C major arpeggio, high
+                const cutesyDurations = ["8n", "8n", "8n", "4n"];
+                let cutesyTime = Tone.now();
+
+                // Play notes with slight detuning/vibrato for weirdness
+                cutesyNotes.forEach((note, index) => {
+                    mechTitleSynth.triggerAttackRelease(note, cutesyDurations[index], cutesyTime);
+                    cutesyTime += Tone.Time(cutesyDurations[index]).toSeconds();
+                });
+            });
+
+            wallsHaveEyesClickable.addEventListener('click', () => {
+                whisperSynth.triggerAttackRelease("0.2s"); // Short static burst/whisper
+            });
+
+            psTitleClickable.addEventListener('click', () => {
+                dataBurstSynth.triggerAttackRelease("C4", "0.1s"); // Quick, distorted tone
+            });
+        };
+    </script>
 </body>
 </html>

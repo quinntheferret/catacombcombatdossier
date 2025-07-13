@@ -218,7 +218,6 @@
             color: #63b3ed; /* Blue to contrast with red glitches */
             font-size: 1.5em;
             opacity: 0;
-            /* REMOVED: pointer-events: none; to make it clickable */
             animation: ascii-flicker 7s infinite; /* Longer animation cycle */
             z-index: 11; /* Above other anomalies */
             text-align: center;
@@ -449,21 +448,14 @@
         let lowLullabySynth;
         let highLullabySynth;
         let mainTitleSynth;
-        let mechTitleSynth; // Changed to PolySynth for melodic notes
+        let mechTitleSynth;
         let whisperSynth;
         let dataBurstSynth;
         let reverb;
         let delay;
 
         window.onload = function() {
-            // Initialize Tone.js context on first user interaction
-            document.documentElement.addEventListener('mousedown', async () => {
-                if (Tone.context.state !== 'running') {
-                    await Tone.start();
-                    console.log("Audio context started.");
-                }
-            }, { once: true });
-
+            console.log("Window loaded. Audio context state:", Tone.context.state);
 
             // Drone Synth (for Classified Stamp)
             droneSynth = new Tone.AMSynth({
@@ -538,16 +530,22 @@
             const psTitleClickable = document.getElementById('psTitleClickable');
 
             // Add click listeners
-            classifiedStamp.addEventListener('click', () => {
+            classifiedStamp.addEventListener('click', async () => {
+                await Tone.start();
+                console.log("Classified Stamp clicked. Audio context state:", Tone.context.state);
                 droneSynth.triggerAttackRelease("C1", "2s");
                 droneSynth.triggerAttackRelease("C#1", "2s", Tone.now() + 0.1);
             });
 
-            plagueKitten.addEventListener('click', () => {
+            plagueKitten.addEventListener('click', async () => {
+                await Tone.start();
+                console.log("Plague Kitten clicked. Audio context state:", Tone.context.state);
                 glitchSynth.triggerAttackRelease("8n"); // Play a short glitch sound
             });
 
-            signalLineClickable.addEventListener('click', () => {
+            signalLineClickable.addEventListener('click', async () => {
+                await Tone.start();
+                console.log("Signal Line clicked. Audio context state:", Tone.context.state);
                 // "Low Lullaby" melody (simple, slightly dissonant)
                 const melody = ["C3", "G2", "A2", "F2"]; // C minor scale notes
                 const reversedMelody = [...melody].reverse(); // Reverse the melody
@@ -561,7 +559,9 @@
                 });
             });
 
-            loopLineClickable.addEventListener('click', () => {
+            loopLineClickable.addEventListener('click', async () => {
+                await Tone.start();
+                console.log("Loop Line clicked. Audio context state:", Tone.context.state);
                 // "High/Childlike Lullaby" melody (higher register, slightly more delicate)
                 const highMelody = ["C5", "G4", "A4", "F4"]; // Higher notes
                 const reversedHighMelody = [...highMelody].reverse(); // Reverse the melody
@@ -575,11 +575,15 @@
                 });
             });
 
-            mainTitleClickable.addEventListener('click', () => {
+            mainTitleClickable.addEventListener('click', async () => {
+                await Tone.start();
+                console.log("Main Title clicked. Audio context state:", Tone.context.state);
                 mainTitleSynth.triggerAttackRelease("C0", "4s"); // Very low, sustained hum
             });
 
-            mechTitleClickable.addEventListener('click', () => {
+            mechTitleClickable.addEventListener('click', async () => {
+                await Tone.start();
+                console.log("Mech Title clicked. Audio context state:", Tone.context.state);
                 // Weirdly cutesy sound for Mech: Plague Kitten
                 const cutesyNotes = ["C5", "E5", "G5", "C6"]; // A C major arpeggio, high
                 const cutesyDurations = ["8n", "8n", "8n", "4n"];
@@ -592,11 +596,15 @@
                 });
             });
 
-            wallsHaveEyesClickable.addEventListener('click', () => {
+            wallsHaveEyesClickable.addEventListener('click', async () => {
+                await Tone.start();
+                console.log("Walls Have Eyes clicked. Audio context state:", Tone.context.state);
                 whisperSynth.triggerAttackRelease("0.2s"); // Short static burst/whisper
             });
 
-            psTitleClickable.addEventListener('click', () => {
+            psTitleClickable.addEventListener('click', async () => {
+                await Tone.start();
+                console.log("PS Title clicked. Audio context state:", Tone.context.state);
                 dataBurstSynth.triggerAttackRelease("C4", "0.1s"); // Quick, distorted tone
             });
         };
